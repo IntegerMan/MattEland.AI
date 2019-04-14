@@ -1,0 +1,8 @@
+
+\.vs/
+
+*.user
+
+MattEland\.Shared/bin/
+
+MattEland\.Shared/obj/
