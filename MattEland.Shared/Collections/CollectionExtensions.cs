@@ -47,5 +47,16 @@ namespace MattEland.Shared.Collections
 
             Enumerable.Range(0, times).Each(operation);
         }
+
+        /// <summary>
+        /// Converts a strongly-typed collection to a hash set of that type.
+        /// </summary>
+        /// <typeparam name="T">The type the collection contains</typeparam>
+        /// <param name="collection">The collection to convert. Can be null.</param>
+        /// <returns>A strongly-typed hash set</returns>
+        public static ISet<T> ToHashSet<T>([CanBeNull] this IEnumerable<T> collection) 
+            => collection == null 
+                ? new HashSet<T>() 
+                : new HashSet<T>(collection);
     }
 }
