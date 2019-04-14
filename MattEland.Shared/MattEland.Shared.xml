@@ -25,6 +25,35 @@
             <param name="times">The amount of times the operation should be invoked</param>
             <param name="operation">The operation to perform</param>
         </member>
+        <member name="T:MattEland.Shared.Collections.DictionaryExtensions">
+            <summary>
+            Contains extension methods related to Dictionary types
+            </summary>
+        </member>
+        <member name="M:MattEland.Shared.Collections.DictionaryExtensions.TryLoad``2(System.Collections.Generic.IReadOnlyDictionary{``0,``1},``0,System.Action{``1})">
+            <summary>
+            Looks for a given key in the dictionary, and if present, will invoke a <paramref name="loadAction"/>
+            with the value present in the dictionary
+            </summary>
+            <typeparam name="TKey">The type of key the Dictionary expects</typeparam>
+            <typeparam name="TValue">The type of value the Dictionary contains</typeparam>
+            <param name="dictionary">The dictionary to inspect. This can be null.</param>
+            <param name="key">The key to search for.</param>
+            <param name="loadAction">
+            The action that will be invoked with the given value, if one is present. This cannot be null.
+            </param>
+            <returns><c>true</c> if the key was present, otherwise <c>false</c>.</returns>
+        </member>
+        <member name="M:MattEland.Shared.Collections.DictionaryExtensions.Each``2(System.Collections.Generic.IDictionary{``0,``1},System.Action{``0,``1})">
+            <summary>
+            Performs an operation using the key and value on each member of the dictionary
+            </summary>
+            <typeparam name="TKey">The type of key the Dictionary expects</typeparam>
+            <typeparam name="TValue">The type of value the Dictionary contains</typeparam>
+            <param name="source">The dictionary</param>
+            <param name="operation">The operation to perform on each key / value pair</param>
+            <returns>The <paramref name="source"/> Dictionary.</returns>
+        </member>
         <member name="T:MattEland.Shared.Strings.IndentingStringBuilder">
             <summary>
             A StringBuilder wrapper that allows for indenting and outdenting code

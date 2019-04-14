@@ -9,12 +9,17 @@
     <Copyright>Copyright (c) 2019 Matt Eland</Copyright>
     <PackageProjectUrl>https://gitlab.com/IntegerMan/matteland.shared</PackageProjectUrl>
     <RepositoryUrl>https://gitlab.com/IntegerMan/matteland.shared</RepositoryUrl>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <DocumentationFile>F:\Dev\matteland.shared\MattEland.Shared\MattEland.Shared.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>D:\Dev\matteland.shared\MattEland.Shared\MattEland.Shared.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
