@@ -96,5 +96,67 @@ namespace MattEland.Shared.Tests
             // Act / Assert
             value.Each(i => throw new ShouldAssertException($"Method should not have been invoked but was with {i}"));
         }
+
+        [Fact]
+        public void EachDictionaryShouldAllowNullDictionaries()
+        {
+            // Arrange
+            IDictionary<int, int> dict = null;
+
+            // Act / Assert
+            dict.Each((key, value) => throw new ShouldAssertException($"Method should not have been invoked but was with key:{key}"));
+        }
+
+        [Fact]
+        public void EachDictionaryShouldAllowEmptyDictionaries()
+        {
+            // Arrange
+            IDictionary<int, int> dict = new Dictionary<int, int>();
+
+            // Act / Assert
+            dict.Each((key, value) => throw new ShouldAssertException($"Method should not have been invoked but was with key:{key}"));
+        }
+
+        [Fact]
+        public void EachDictionaryIncludeEachKey()
+        {
+            // Arrange
+            IDictionary<int, int> dict = new Dictionary<int, int>
+            {
+                { 22, 1 },
+                { 20, 1 }
+            };
+            int keySum = 0;
+
+            // Act
+            dict.Each((key, value) => keySum += key);
+
+            // Assert
+            keySum.ShouldBe(42);
+        }
+
+        [Fact]
+        public void EachDictionaryIncludesCorrectValues()
+        {
+            // Arrange
+            IDictionary<int, int> dict = new Dictionary<int, int>
+            {
+                { 22, 1 },
+                { 20, 5 }
+            };
+
+            // Act / Assert
+            dict.Each((key, value) => dict[key].ShouldBe(value));
+        }
+
+        [Fact]
+        public void EachDictionaryThrowsOnNoOperation()
+        {
+            // Arrange
+            IDictionary<int, int> dict = new Dictionary<int, int>();
+
+            // Act / Assert
+            Should.Throw<ArgumentNullException>(() => dict.Each(null));
+        }
     }
 }
