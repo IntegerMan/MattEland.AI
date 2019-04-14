@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace MattEland.Shared.Collections
 {
     /// <summary>
     /// Helper extension methods for working with collections or ranges.
     /// </summary>
+    [UsedImplicitly]
     public static class CollectionExtensions
     {
         /// <summary>
@@ -20,6 +22,7 @@ namespace MattEland.Shared.Collections
         {
             if (operation == null) throw new ArgumentNullException(nameof(operation));
 
+            // Fail safely to prevent unnecessary safety code for clients
             if (source != null)
             {
                 foreach (var item in source)
@@ -36,8 +39,12 @@ namespace MattEland.Shared.Collections
         /// </summary>
         /// <param name="times">The amount of times the operation should be invoked</param>
         /// <param name="operation">The operation to perform</param>
+        [UsedImplicitly]
         public static void Each(this int times, Action<int> operation)
         {
+            // Fail safely to prevent unnecessary safety code for clients
+            if (times <= 0) return;
+
             Enumerable.Range(0, times).Each(operation);
         }
     }
