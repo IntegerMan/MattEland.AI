@@ -20,8 +20,8 @@ namespace MattEland.AI.Neural
         /// <param name="numOutputs">The number of nodes in the output layer</param>
         public NeuralNet(int numInputs, int numOutputs)
         {
-            if (numInputs <=0) throw new ArgumentOutOfRangeException(nameof(numInputs), "You must have at least one input node");
-            if (numOutputs <=0) throw new ArgumentOutOfRangeException(nameof(numOutputs), "You must have at least one output node");
+            if (numInputs <= 0) throw new ArgumentOutOfRangeException(nameof(numInputs), "You must have at least one input node");
+            if (numOutputs <= 0) throw new ArgumentOutOfRangeException(nameof(numOutputs), "You must have at least one output node");
 
             Inputs = new NeuralNetLayer(numInputs);
             Outputs = new NeuralNetLayer(numOutputs);
@@ -31,16 +31,14 @@ namespace MattEland.AI.Neural
         /// Adds a hidden layer to the neural net and returns the new layer.
         /// </summary>
         /// <param name="numNeurons">The number of neurons in the layer</param>
-        /// <returns>The newly-created layer</returns>
-        public NeuralNetLayer AddHiddenLayer(int numNeurons)
+        public void AddHiddenLayer(int numNeurons)
         {
-            if (numNeurons <= 0) throw new ArgumentOutOfRangeException(nameof(numNeurons), "You cannot add a hidden layer without any nodes" );
+            if (numNeurons <= 0) throw new ArgumentOutOfRangeException(nameof(numNeurons), "You cannot add a hidden layer without any nodes");
+            if (IsConnected) throw new InvalidOperationException("Cannot add a new layer after the network has been evaluated.");
 
             var layer = new NeuralNetLayer(numNeurons);
 
             _hiddenLayers.Add(layer);
-
-            return layer;
         }
 
         /// <summary>
@@ -103,18 +101,18 @@ namespace MattEland.AI.Neural
         /// <summary>
         /// The input layer
         /// </summary>
-        public NeuralNetLayer Inputs { get; }
+        internal NeuralNetLayer Inputs { get; }
 
         /// <summary>
         /// The output layer
         /// </summary>
-        public NeuralNetLayer Outputs { get; }
+        internal NeuralNetLayer Outputs { get; }
 
         /// <summary>
         /// Gets all layers in the network, in order from first to last, including the Input layer,
         /// output layer, and any hidden layers.
         /// </summary>
-        public IEnumerable<NeuralNetLayer> Layers
+        internal IEnumerable<NeuralNetLayer> Layers
         {
             get
             {
@@ -155,7 +153,7 @@ namespace MattEland.AI.Neural
                         connection.Weight = weights[weightIndex++];
                         ConnectorCount++;
                     }
-                }                
+                }
             }
         }
 

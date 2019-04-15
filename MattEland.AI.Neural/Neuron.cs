@@ -9,7 +9,7 @@ namespace MattEland.AI.Neural
     /// <summary>
     /// Represents a Neuron in a layer of a Neural Network.
     /// </summary>
-    public class Neuron
+    internal class Neuron
     {
         /// <summary>
         /// Gets or sets the value of the Neuron.

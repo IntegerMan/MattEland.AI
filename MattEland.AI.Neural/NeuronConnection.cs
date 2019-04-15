@@ -6,7 +6,7 @@ namespace MattEland.AI.Neural
     /// <summary>
     /// Represents a unidirectional connection between two <see cref="Neuron"/> instances.
     /// </summary>
-    public class NeuronConnection
+    internal class NeuronConnection
     {
         /// <summary>
         /// Creates a new <see cref="NeuronConnection"/> between a <paramref name="source"/> neuron and

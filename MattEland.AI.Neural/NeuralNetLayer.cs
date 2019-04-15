@@ -10,7 +10,7 @@ namespace MattEland.AI.Neural
     /// <summary>
     /// Represents a layer in a neural network. This could be an input, output, or hidden layer.
     /// </summary>
-    public class NeuralNetLayer : IEnumerable<Neuron>
+    internal class NeuralNetLayer : IEnumerable<Neuron>
     {
         private readonly IList<Neuron> _neurons;
 
