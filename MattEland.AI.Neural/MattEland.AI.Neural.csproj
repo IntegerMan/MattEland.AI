@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Matt Eland</Authors>
+    <Description>A lightweight and minimal neural network class library.</Description>
+    <Copyright>Copyright (c) Matt Eland 2019</Copyright>
+    <PackageProjectUrl>https://gitlab.com/IntegerMan/matteland.shared</PackageProjectUrl>
+    <RepositoryUrl>https://gitlab.com/IntegerMan/matteland.shared</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
