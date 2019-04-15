@@ -9,14 +9,12 @@ namespace MattEland.AI.Neural
     public class NeuronConnection
     {
         /// <summary>
-        /// Creates a new <see cref="NeuronConnection"/> between a <paramref name="source"/> neuron and
+        /// Creates a new <see cref="NeuronConnection"/> between a source neuron and
         /// a <see cref="Target"/> neuron.
         /// </summary>
-        /// <param name="source">The neuron that the connection flows from</param>
         /// <param name="target">The neuron that the connection flows to</param>
-        public NeuronConnection([NotNull] Neuron source, [NotNull] Neuron target)
+        public NeuronConnection([NotNull] Neuron target)
         {
-            Source = source ?? throw new ArgumentNullException(nameof(source));
             Target = target ?? throw new ArgumentNullException(nameof(target));
 
             target.RegisterIncomingConnection(this);
@@ -34,12 +32,6 @@ namespace MattEland.AI.Neural
         /// as far as the calculations go. This is typically a value between -1 and 1.
         /// </summary>
         public decimal Weight { get; set; } = 1;
-        
-        /// <summary>
-        /// The Neuron that fires the connection
-        /// </summary>
-        [NotNull]
-        public Neuron Source { get; }
 
         /// <summary>
         /// The Neuron that receives the connection.

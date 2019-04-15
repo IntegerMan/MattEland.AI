@@ -31,7 +31,7 @@ namespace MattEland.AI.Neural
         {
             if (nextNeuron == null) throw new ArgumentNullException(nameof(nextNeuron));
 
-            OutgoingConnections.Add(new NeuronConnection(this, nextNeuron));
+            OutgoingConnections.Add(new NeuronConnection(nextNeuron));
         }
 
         private decimal _sum;
