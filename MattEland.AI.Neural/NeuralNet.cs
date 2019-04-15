@@ -50,23 +50,24 @@ namespace MattEland.AI.Neural
         /// <returns>The values outputted from the output layer</returns>
         public IEnumerable<decimal> Evaluate(IEnumerable<decimal> inputs)
         {
+            // Don't force people to explicitly connect
+            if (!IsConnected)
+            {
+                Connect();
+            }
+
             // Pipe the inputs into the network and evaluate the results
             Inputs.SetValues(inputs);
-            Inputs.Evaluate();
 
-            // Extract the values from the output layer and return them
-            return Outputs.Select(n => n.Value);
+            return Inputs.Evaluate();
         }
 
         /// <summary>
         /// Declares that the network is now complete and that connections should be created.
         /// </summary>
-        public void Connect()
+        private void Connect()
         {
-            if (IsConnected)
-            {
-                throw new InvalidOperationException("The Network has already been connected");
-            }
+            if (IsConnected) throw new InvalidOperationException("The Network has already been connected");
 
             if (_hiddenLayers.Any())
             {

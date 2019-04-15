@@ -51,13 +51,16 @@ namespace MattEland.AI.Neural
         /// <summary>
         /// Evaluates each node in the layer, as well as the next layer if one is present.
         /// </summary>
-        internal void Evaluate()
+        /// <returns>The outputs from the Output layer</returns>
+        internal IEnumerable<decimal> Evaluate()
         {
+            // Calculate all neurons.
             _neurons.Each(n => n.Evaluate());
 
-            _nextLayer?.Evaluate();
-
-            // TODO: This could all pass the outputs back, to make for a simpler invocation AI
+            // If this is the last layer, return its values, otherwise delegate to the next layer and return its results
+            return _nextLayer == null 
+                ? _neurons.Select(n => n.Value) 
+                : _nextLayer.Evaluate();
         }
 
         /// <summary>
