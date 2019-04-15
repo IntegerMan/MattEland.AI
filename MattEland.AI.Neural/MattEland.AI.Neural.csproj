@@ -8,7 +8,7 @@
     <Copyright>Copyright (c) Matt Eland 2019</Copyright>
     <PackageProjectUrl>https://gitlab.com/IntegerMan/matteland.ai</PackageProjectUrl>
     <RepositoryUrl>https://gitlab.com/IntegerMan/matteland.ai</RepositoryUrl>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -8,14 +8,16 @@ namespace MattEland.AI.Neural
     /// </summary>
     public class NeuronConnection
     {
+        [NotNull] private readonly Neuron _target;
+
         /// <summary>
         /// Creates a new <see cref="NeuronConnection"/> between a source neuron and
-        /// a <see cref="Target"/> neuron.
+        /// a target neuron.
         /// </summary>
         /// <param name="target">The neuron that the connection flows to</param>
         public NeuronConnection([NotNull] Neuron target)
         {
-            Target = target ?? throw new ArgumentNullException(nameof(target));
+            _target = target ?? throw new ArgumentNullException(nameof(target));
 
             target.RegisterIncomingConnection(this);
         }
@@ -25,7 +27,7 @@ namespace MattEland.AI.Neural
         /// Weight into account.
         /// </summary>
         /// <param name="value">The value to pass on to the Target.</param>
-        internal void Fire(decimal value) => Target.Receive(value * Weight);
+        internal void Fire(decimal value) => _target.Receive(value * Weight);
 
         /// <summary>
         /// Gets or sets the weight of the connection. This is the importance of that connection
@@ -33,10 +35,5 @@ namespace MattEland.AI.Neural
         /// </summary>
         public decimal Weight { get; set; } = 1;
 
-        /// <summary>
-        /// The Neuron that receives the connection.
-        /// </summary>
-        [NotNull]
-        public Neuron Target { get; }
     }
 }
