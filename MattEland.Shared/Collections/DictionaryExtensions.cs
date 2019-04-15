@@ -44,6 +44,7 @@ namespace MattEland.Shared.Collections
         /// <param name="source">The dictionary</param>
         /// <param name="operation">The operation to perform on each key / value pair</param>
         /// <returns>The <paramref name="source"/> Dictionary.</returns>
+        [NotNull]
         [UsedImplicitly]
         public static IDictionary<TKey, TValue> Each<TKey, TValue>(
             [CanBeNull] this IDictionary<TKey, TValue> source, 

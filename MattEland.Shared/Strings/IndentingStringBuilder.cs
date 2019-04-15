@@ -55,7 +55,7 @@ namespace MattEland.Shared.Strings
         public void AppendLine() => _sb.AppendLine();
 
         /// <inheritdoc />
-        public void AppendLine(string message) => _sb.AppendLine($"{IndentString}{message}");
+        public void AppendLine([CanBeNull] string message) => _sb.AppendLine($"{IndentString}{message}");
 
         private string IndentString
         {
@@ -73,6 +73,7 @@ namespace MattEland.Shared.Strings
         }
 
         /// <inheritdoc />
+        [NotNull]
         public IDisposable IndentScope() => new IndentScopeHelper(this);
 
     }

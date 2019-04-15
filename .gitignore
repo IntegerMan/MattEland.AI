@@ -12,3 +12,11 @@ XUnitTestProject1/bin/
 XUnitTestProject1/obj/
 
 MattEland\.Shared/MattEland\.Shared\.xml
+
+MattEland\.AI\.Neural/bin/
+
+MattEland\.AI\.Neural/obj/
+
+MattEland\.Shared\.Tests/bin/
+
+MattEland\.Shared\.Tests/obj/

@@ -18,6 +18,7 @@ namespace MattEland.Shared.Collections
         /// <param name="source">The collection</param>
         /// <param name="operation">The operation to perform on each member of the collection</param>
         /// <returns>The <paramref name="source"/> collection.</returns>
+        [NotNull]
         public static IEnumerable<T> Each<T>(this IEnumerable<T> source, Action<T> operation)
         {
             if (operation == null) throw new ArgumentNullException(nameof(operation));
@@ -54,6 +55,7 @@ namespace MattEland.Shared.Collections
         /// <typeparam name="T">The type the collection contains</typeparam>
         /// <param name="collection">The collection to convert. Can be null.</param>
         /// <returns>A strongly-typed hash set</returns>
+        [NotNull]
         public static ISet<T> ToHashSet<T>([CanBeNull] this IEnumerable<T> collection) 
             => collection == null 
                 ? new HashSet<T>() 
