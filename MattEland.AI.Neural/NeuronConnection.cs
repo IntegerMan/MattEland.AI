@@ -6,7 +6,7 @@ namespace MattEland.AI.Neural
     /// <summary>
     /// Represents a unidirectional connection between two <see cref="Neuron"/> instances.
     /// </summary>
-    internal class NeuronConnection
+    public class NeuronConnection
     {
         /// <summary>
         /// Creates a new <see cref="NeuronConnection"/> between a <paramref name="source"/> neuron and
@@ -27,7 +27,7 @@ namespace MattEland.AI.Neural
         /// Weight into account.
         /// </summary>
         /// <param name="value">The value to pass on to the Target.</param>
-        public void Fire(decimal value) => Target.Receive(value * Weight);
+        internal void Fire(decimal value) => Target.Receive(value * Weight);
 
         /// <summary>
         /// Gets or sets the weight of the connection. This is the importance of that connection

@@ -8,7 +8,7 @@ namespace MattEland.AI.Neural
     /// <summary>
     /// Represents a Neuron in a layer of a Neural Network.
     /// </summary>
-    internal class Neuron
+    public class Neuron
     {
         /// <summary>
         /// Gets or sets the value of the Neuron.
@@ -27,7 +27,7 @@ namespace MattEland.AI.Neural
         /// Connects this Neuron to the <paramref name="nextNeuron" />
         /// </summary>
         /// <param name="nextNeuron">The Neuron to connect to.</param>
-        public void ConnectTo([NotNull] Neuron nextNeuron)
+        internal void ConnectTo([NotNull] Neuron nextNeuron)
         {
             if (nextNeuron == null) throw new ArgumentNullException(nameof(nextNeuron));
 
@@ -41,7 +41,7 @@ namespace MattEland.AI.Neural
         /// Evaluates the values from the incoming connections, averages them by the count of connections,
         /// and calculates the Neuron's Value, which is then passed on to any outgoing connections.
         /// </summary>
-        public void Evaluate()
+        internal void Evaluate()
         {
             if (_numInputs > 0)
             {

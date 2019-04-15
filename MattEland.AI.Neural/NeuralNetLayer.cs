@@ -10,7 +10,7 @@ namespace MattEland.AI.Neural
     /// <summary>
     /// Represents a layer in a neural network. This could be an input, output, or hidden layer.
     /// </summary>
-    internal class NeuralNetLayer : IEnumerable<Neuron>
+    public class NeuralNetLayer : IEnumerable<Neuron>
     {
         private readonly IList<Neuron> _neurons;
 
@@ -33,7 +33,11 @@ namespace MattEland.AI.Neural
         /// </summary>
         public IEnumerable<Neuron> Neurons => _neurons;
 
-        public void SetValues([NotNull] IEnumerable<decimal> values)
+        /// <summary>
+        /// Sets the values of the layer to the given values set. One value will be used for each neuron in the layer.
+        /// </summary>
+        /// <param name="values">The values to use.</param>
+        internal void SetValues([NotNull] IEnumerable<decimal> values)
         {
             if (values == null) throw new ArgumentNullException(nameof(values));
             if (values.Count() != _neurons.Count) throw new ArgumentException("The number of inputs must match the number of neurons in a layer", nameof(values));
@@ -79,6 +83,7 @@ namespace MattEland.AI.Neural
         /// Sets the weights in the layer to the values provided
         /// </summary>
         /// <param name="weights">The weights to use to set in the connections</param>
+        [UsedImplicitly]
         public void SetWeights(IList<decimal> weights)
         {
             int weightIndex = 0;

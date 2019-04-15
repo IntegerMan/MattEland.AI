@@ -6,9 +6,21 @@
     <Authors>Matt Eland</Authors>
     <Description>A lightweight and minimal neural network class library.</Description>
     <Copyright>Copyright (c) Matt Eland 2019</Copyright>
-    <PackageProjectUrl>https://gitlab.com/IntegerMan/matteland.shared</PackageProjectUrl>
-    <RepositoryUrl>https://gitlab.com/IntegerMan/matteland.shared</RepositoryUrl>
-    <Version>1.0.1</Version>
+    <PackageProjectUrl>https://gitlab.com/IntegerMan/matteland.ai</PackageProjectUrl>
+    <RepositoryUrl>https://gitlab.com/IntegerMan/matteland.ai</RepositoryUrl>
+    <Version>1.0.2</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>F:\Dev\matteland.ai\MattEland.AI.Neural\MattEland.AI.Neural.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <DocumentationFile>F:\Dev\matteland.ai\MattEland.AI.Neural\MattEland.AI.Neural.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

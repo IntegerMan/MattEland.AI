@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace MattEland.AI.Neural
 {
@@ -63,7 +64,7 @@ namespace MattEland.AI.Neural
         /// <summary>
         /// Declares that the network is now complete and that connections should be created.
         /// </summary>
-        private void Connect()
+        public void Connect()
         {
             if (IsConnected) throw new InvalidOperationException("The Network has already been connected");
 
@@ -101,18 +102,18 @@ namespace MattEland.AI.Neural
         /// <summary>
         /// The input layer
         /// </summary>
-        internal NeuralNetLayer Inputs { get; }
+        public NeuralNetLayer Inputs { get; }
 
         /// <summary>
         /// The output layer
         /// </summary>
-        internal NeuralNetLayer Outputs { get; }
+        public NeuralNetLayer Outputs { get; }
 
         /// <summary>
         /// Gets all layers in the network, in order from first to last, including the Input layer,
         /// output layer, and any hidden layers.
         /// </summary>
-        internal IEnumerable<NeuralNetLayer> Layers
+        public IEnumerable<NeuralNetLayer> Layers
         {
             get
             {
@@ -132,6 +133,7 @@ namespace MattEland.AI.Neural
         /// weight values from JSON and restoring them into the network.
         /// </summary>
         /// <param name="weights">The weight values from -1 to 1 for every connector in the network.</param>
+        [UsedImplicitly]
         public void SetWeights(IList<decimal> weights)
         {
             ConnectorCount = 0;
