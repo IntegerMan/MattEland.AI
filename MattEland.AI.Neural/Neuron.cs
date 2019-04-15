@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
 using MattEland.Shared.Collections;
 
@@ -21,7 +20,6 @@ namespace MattEland.AI.Neural
         /// </summary>
         public Neuron()
         {
-            IncomingConnections = new List<NeuronConnection>();
             OutgoingConnections = new List<NeuronConnection>();
         }
 
@@ -37,6 +35,7 @@ namespace MattEland.AI.Neural
         }
 
         private decimal _sum;
+        private int _numInputs;
 
         /// <summary>
         /// Evaluates the values from the incoming connections, averages them by the count of connections,
@@ -44,9 +43,9 @@ namespace MattEland.AI.Neural
         /// </summary>
         public void Evaluate()
         {
-            if (IncomingConnections.Any())
+            if (_numInputs > 0)
             {
-                Value = _sum / IncomingConnections.Count;
+                Value = _sum / _numInputs;
                 _sum = 0;
             }
 
@@ -56,15 +55,8 @@ namespace MattEland.AI.Neural
         /// <summary>
         /// The list of outgoing Neuron connections
         /// </summary>
+        [NotNull, ItemNotNull]
         public IList<NeuronConnection> OutgoingConnections { get; }
-
-        /// <summary>
-        /// The list of incoming Neuron connections
-        /// </summary>
-        /// <remarks>
-        /// This presently has no use as nothing flows backwards.
-        /// </remarks>
-        public IList<NeuronConnection> IncomingConnections { get; }
 
         /// <summary>
         /// Receives a value from a connection.
@@ -80,8 +72,7 @@ namespace MattEland.AI.Neural
         {
             if (neuronConnection == null) throw new ArgumentNullException(nameof(neuronConnection));
 
-            // TODO: I actually don't even need to track this.
-            IncomingConnections.Add(neuronConnection);
+            _numInputs++;
         }
     }
 }
