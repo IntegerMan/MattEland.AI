@@ -1,3 +1,3 @@
-# MattEland.Shared
+# MattEland.AI
 
-Shared logic between multiple different projects. Mostly utility functions and ease-of-use code.
+Artificial Intelligence related libraries not tied to a specific project.
