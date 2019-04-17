@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MattEland.AI.Neural", "MattEland.AI.Neural\MattEland.AI.Neural.csproj", "{C0E34699-217F-4CA4-A58C-B3D368DEF8BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.AI.Tests", "XUnitTestProject1\MattEland.AI.Tests.csproj", "{E3E72EDA-B60C-46EB-9BCB-2448B131FDAC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MattEland.AI.Tests", "XUnitTestProject1\MattEland.AI.Tests.csproj", "{E3E72EDA-B60C-46EB-9BCB-2448B131FDAC}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MattEland.AI.Neural.Functional", "MattEland.AI.Neural.Functional\MattEland.AI.Neural.Functional.fsproj", "{DA19A318-819F-47AB-B268-7DFA4E67159A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{E3E72EDA-B60C-46EB-9BCB-2448B131FDAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3E72EDA-B60C-46EB-9BCB-2448B131FDAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3E72EDA-B60C-46EB-9BCB-2448B131FDAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA19A318-819F-47AB-B268-7DFA4E67159A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA19A318-819F-47AB-B268-7DFA4E67159A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA19A318-819F-47AB-B268-7DFA4E67159A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA19A318-819F-47AB-B268-7DFA4E67159A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

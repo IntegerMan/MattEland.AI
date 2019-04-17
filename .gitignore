@@ -22,3 +22,7 @@ MattEland\.Shared\.Tests/bin/
 MattEland\.Shared\.Tests/obj/
 
 MattEland\.AI\.Neural/MattEland\.AI\.Neural\.xml
+
+MattEland\.AI\.Neural\.Functional/bin/
+
+MattEland\.AI\.Neural\.Functional/obj/
