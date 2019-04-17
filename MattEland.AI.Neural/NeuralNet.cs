@@ -50,10 +50,7 @@ namespace MattEland.AI.Neural
         public IEnumerable<decimal> Evaluate(IEnumerable<decimal> inputs)
         {
             // Don't force people to explicitly connect
-            if (!IsConnected)
-            {
-                Connect();
-            }
+            EnsureConnected();
 
             // Pipe the inputs into the network and evaluate the results
             Inputs.SetValues(inputs);
@@ -131,11 +128,15 @@ namespace MattEland.AI.Neural
         /// <summary>
         /// Sets the weights of all connections in the network. This is a convenience method for loading
         /// weight values from JSON and restoring them into the network.
+        /// This will connect the network if it is not currently connected.
         /// </summary>
         /// <param name="weights">The weight values from -1 to 1 for every connector in the network.</param>
         [UsedImplicitly]
         public void SetWeights(IList<decimal> weights)
         {
+            // Setting weights makes no sense unless the network is connected, so ensure we're connected
+            EnsureConnected();
+
             ConnectorCount = 0;
 
             int weightIndex = 0;
@@ -157,6 +158,16 @@ namespace MattEland.AI.Neural
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Connects the neural net if it has not yet been connected
+        /// </summary>
+        private void EnsureConnected()
+        {
+            if (IsConnected) return;
+
+            Connect();
         }
 
         /// <summary>
