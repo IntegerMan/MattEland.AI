@@ -21,8 +21,16 @@ namespace MattEland.AI.Neural
         /// Creates a new neural network layer with the given count of neurons.
         /// </summary>
         /// <param name="numNeurons">The number of neurons in the layer</param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown if <paramref name="numNeurons" /> was less than 1
+        /// </exception>
         public NeuralNetLayer(int numNeurons)
         {
+            if (numNeurons <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(numNeurons), "Each layer must have at least one Neuron");
+            }
+
             _neurons = new List<Neuron>(numNeurons);
 
             numNeurons.Each(n => _neurons.Add(new Neuron()));
@@ -37,6 +45,7 @@ namespace MattEland.AI.Neural
         /// Sets the values of the layer to the given values set. One value will be used for each neuron in the layer.
         /// </summary>
         /// <param name="values">The values to use.</param>
+        /// <exception cref="ArgumentException">Thrown if <paramref name="values"/> did not have an expected values count.</exception>
         internal void SetValues([NotNull] IEnumerable<decimal> values)
         {
             if (values == null) throw new ArgumentNullException(nameof(values));

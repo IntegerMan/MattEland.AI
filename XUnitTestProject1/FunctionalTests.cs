@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MattEland.AI.Neural.Functional;
+using MattEland.Shared.Collections;
 using Microsoft.FSharp.Collections;
 using Shouldly;
 using Xunit;
+using Neuron = MattEland.AI.Neural.Functional.Neuron;
+using NeuronConnection = MattEland.AI.Neural.Functional.NeuronConnection;
 
 namespace MattEland.AI.Tests
 {
@@ -56,6 +59,49 @@ namespace MattEland.AI.Tests
 
             // Assert
             sum.ShouldBe(expected);
+        }
+
+        [Theory]
+        [InlineData(1)]
+        [InlineData(5)]
+        [InlineData(42)]
+        public void NeuralNetLayerShouldHaveCorrectNumberOfNodes(int expectedNodes)
+        {
+            // Arrange / Act
+            var layer = new NeuralNetLayer(expectedNodes);
+
+            // Assert
+            layer.Neurons.ShouldNotBeNull();
+            layer.Neurons.Count().ShouldBe(expectedNodes);
+            layer.Neurons.Each(n => n.ShouldNotBeNull());
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        public void InvalidInputsToNeuralNetsShouldThrowArgEx(int numNodes)
+        {
+            // Arrange / Act / Assert
+            Should.Throw<ArgumentException>(() => new NeuralNetLayer(numNodes));
+        }
+
+        [Fact]
+        public void SetNodeValuesShouldModifyNodes()
+        {
+            // Arrange
+            var layer = new NeuralNetLayer(3);
+            var values = new List<decimal> {1,2,3};
+
+            // Act
+            layer.SetValues(values);
+
+            // Assert
+            var neurons = layer.Neurons.ToList();
+            int index = 0;
+            foreach (var v in values)
+            {
+                neurons[index++].Value.ShouldBe(v);
+            }
         }
     }
 }

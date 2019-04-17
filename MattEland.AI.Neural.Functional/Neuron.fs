@@ -39,3 +39,15 @@ and Neuron ([<Optional>] ?initialValue: decimal) =
   member this.Evaluate(): decimal =
     value <- Seq.sumBy (fun (c:NeuronConnection) -> c.Calculate) this.Inputs;
     value;
+
+/// A layer is just a series of Neurons in parallel that will link to every Neuron in the next layer (if any is present)
+and NeuralNetLayer(numNeurons: int) =
+  do if numNeurons <= 0 then invalidArg "numNeurons" "There must be at least one neuron in each layer";
+    
+  /// Layers should start with an empty collection of neurons
+  member this.Neurons = seq { for i in 1 .. numNeurons do yield new Neuron 0M};
+
+  /// Sets the value of every neuron in the sequence to the corresponding ordered value provided
+  member this.SetValues (values: decimal seq) = 
+    for neuron, value in Seq.zip this.Neurons values do
+      neuron.Value <- value;
