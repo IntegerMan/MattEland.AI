@@ -44,10 +44,11 @@ and Neuron ([<Optional>] ?initialValue: decimal) =
 and NeuralNetLayer(numNeurons: int) =
   do if numNeurons <= 0 then invalidArg "numNeurons" "There must be at least one neuron in each layer";
     
+  let neurons: Neuron seq = seq [ for i in 1 .. numNeurons -> new Neuron 0M]
   /// Layers should start with an empty collection of neurons
-  member this.Neurons = seq { for i in 1 .. numNeurons do yield new Neuron 0M};
+  member this.Neurons: Neuron seq = neurons;
 
   /// Sets the value of every neuron in the sequence to the corresponding ordered value provided
   member this.SetValues (values: decimal seq) = 
-    for neuron, value in Seq.zip this.Neurons values do
-      neuron.Value <- value;
+    let assignValue (n:Neuron) (v:decimal) = n.Value <- v;
+    Seq.iter2 assignValue this.Neurons values

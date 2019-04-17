@@ -98,10 +98,7 @@ namespace MattEland.AI.Tests
             // Assert
             var neurons = layer.Neurons.ToList();
             int index = 0;
-            foreach (var v in values)
-            {
-                neurons[index++].Value.ShouldBe(v);
-            }
+            values.Each(v => neurons[index++].Value.ShouldBe(v));
         }
     }
 }
