@@ -52,3 +52,48 @@ and NeuralNetLayer(numNeurons: int) =
   member this.SetValues (values: decimal seq) = 
     let assignValue (n:Neuron) (v:decimal) = n.Value <- v;
     Seq.iter2 assignValue this.Neurons values
+
+  /// Evaluates the layer and returns the value of each node
+  member this.Evaluate(): decimal seq =
+    seq {
+      for n in this.Neurons do
+        yield n.Evaluate();
+    }
+
+/// A high-level encapsulation of a neural net
+and NeuralNet(numInputs: int, numOutputs: int) =
+
+  do 
+    if numInputs <= 0 then invalidArg "numInputs" "There must be at least one neuron in the input layer";
+    if numOutputs <= 0 then invalidArg "numOutputs" "There must be at least one neuron in the output layer";
+
+  let inputLayer: NeuralNetLayer = new NeuralNetLayer(numInputs);
+  let outputLayer: NeuralNetLayer = new NeuralNetLayer(numOutputs);
+  let mutable isConnected: bool = false;
+
+  /// Connects the various layers of the neural network
+  let connect() =
+    // TODO: Loop through all layers but the output layer and connect each with the next layer in sequence
+    isConnected <- true;
+
+  /// Gets the layers of the neural network, in sequential order
+  member this.Layers: NeuralNetLayer seq =
+    seq {
+      yield inputLayer;
+      yield outputLayer;
+    }
+
+  /// Evaluates the entire neural network and yields the result of the output layer
+  member this.Evaluate(): decimal seq = 
+
+    // Connect as needed
+    if isConnected = false then do
+      connect();
+
+    // Iterate through the layers and run calculations
+    let mutable result: decimal seq = Seq.empty;
+    for layer in this.Layers do
+      result <- layer.Evaluate();
+
+    // Return the result of the last layer
+    result;
