@@ -16,13 +16,14 @@ and Neuron () =
   member this.Inputs = connections
 
   /// Exposes the current calculated amount of the Neuron
-  member this.Value = value;
-  
+  member this.Value
+    with get () = value
+    and set (newValue) = value <- newValue
+
   /// Adds an incoming connection from another Neuron
   member this.AddIncomingConnection c = connections <- c :: connections
 
-  /// Adds all items in the collection together
-  member this.Evaluate (numbers: decimal list) = 
-    List.iter (fun (c:NeuronConnection) -> (value <- value + c.Calculate)) this.Inputs;
-
-  
+  /// Adds all connections together, stores the result in Value, and returns the value
+  member this.Evaluate(): decimal =
+    value <- List.sumBy (fun (c:NeuronConnection) -> c.Calculate) this.Inputs;
+    value;
