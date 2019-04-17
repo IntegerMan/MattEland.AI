@@ -2,8 +2,14 @@
 
 /// Represents a connection between two Neurons
 type NeuronConnection(source: Neuron, weight: decimal) = 
+
+  /// The neuron this connection comes from
   member this.Source: Neuron = source;
+
+  /// The mathematical weight or importance of the connection
   member this.Weight: decimal = weight;
+
+  /// Calculates the value of the connection by evaluating the weight and the current value of the source neuron
   member this.Calculate = this.Weight * this.Source.Value;
 
 /// Represents a node in a Neural Network
