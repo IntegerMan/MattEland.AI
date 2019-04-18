@@ -3,7 +3,7 @@
 open System.Runtime.InteropServices
 
 /// Represents a connection between two Neurons
-type NeuronConnection(source: Neuron, ?initialWeight: decimal) = 
+type NeuronConnection(source: Neuron, ?initialWeight: decimal) = // TODO: This class might not be needed anymore
 
   let mutable weight: decimal  = defaultArg initialWeight 1M ;
 
@@ -40,6 +40,10 @@ and Neuron ([<Optional>] ?initialValue: decimal) =
     value <- Seq.sumBy (fun (c:NeuronConnection) -> c.Calculate) this.Inputs;
     value;
 
+  /// Connects this neuron to another
+  member this.Connect(target: Neuron) =
+    target.AddIncomingConnection(new NeuronConnection(this));
+
 /// A layer is just a series of Neurons in parallel that will link to every Neuron in the next layer (if any is present)
 and NeuralNetLayer(numNeurons: int) =
   do if numNeurons <= 0 then invalidArg "numNeurons" "There must be at least one neuron in each layer";
@@ -60,6 +64,12 @@ and NeuralNetLayer(numNeurons: int) =
         yield n.Evaluate();
     }
 
+  /// Connects every node in this layer to the target layer
+  member this.Connect(layer: NeuralNetLayer): unit = 
+    for nSource in neurons do
+      for nTarget in layer.Neurons do
+        nSource.Connect(nTarget);
+
 /// A high-level encapsulation of a neural net
 and NeuralNet(numInputs: int, numOutputs: int) =
 
@@ -71,10 +81,17 @@ and NeuralNet(numInputs: int, numOutputs: int) =
   let outputLayer: NeuralNetLayer = new NeuralNetLayer(numOutputs);
   let mutable isConnected: bool = false;
 
-  /// Connects the various layers of the neural network
-  let connect() =
-    // TODO: Loop through all layers but the output layer and connect each with the next layer in sequence
-    isConnected <- true;
+  let connectLayers (n1:NeuralNetLayer) (n2:NeuralNetLayer) = n1.Connect(n2);
+
+  let layersMinusInput: NeuralNetLayer seq =
+    seq {
+      yield outputLayer;
+    }
+
+  let layersMinusOutput: NeuralNetLayer seq =
+    seq {
+      yield inputLayer;
+    }
 
   /// Gets the layers of the neural network, in sequential order
   member this.Layers: NeuralNetLayer seq =
@@ -82,13 +99,31 @@ and NeuralNet(numInputs: int, numOutputs: int) =
       yield inputLayer;
       yield outputLayer;
     }
+        
+  /// Represents the input layer for the network which take in values from another system
+  member this.InputLayer = inputLayer;
+  
+  /// Represents the last layer in the network which has the values that will be taken out of the network
+  member this.OutputLayer = outputLayer;    
 
+  // TODO: Hidden layer support is important too
+  
+  /// Connects the various layers of the neural network
+  member this.Connect() =
+    if isConnected = true then invalidOp "The Neural Network has already been connected";
+    
+    Seq.iter2 (fun l lNext -> connectLayers l lNext) layersMinusOutput layersMinusInput 
+    isConnected <- true;
+  
+  /// Determines whether or not the network has been connected. After the network is connected, it can no longer be added to
+  member this.IsConnected = isConnected;
+  
   /// Evaluates the entire neural network and yields the result of the output layer
   member this.Evaluate(): decimal seq = 
 
     // Connect as needed
     if isConnected = false then do
-      connect();
+      this.Connect();
 
     // Iterate through the layers and run calculations
     let mutable result: decimal seq = Seq.empty;

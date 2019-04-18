@@ -100,5 +100,56 @@ namespace MattEland.AI.Tests
             int index = 0;
             values.Each(v => neurons[index++].Value.ShouldBe(v));
         }
+
+        [Theory]
+        [InlineData(5, 3)]
+        [InlineData(1, 10)]
+        public void CreateNetworkShouldHaveCorrectNodeCounts(int numInputs, int numOutputs)
+        {
+            // Arrange / Act
+            var network = new NeuralNet(numInputs, numOutputs);
+
+            // Assert
+            network.Layers.Count().ShouldBe(2);
+            network.InputLayer.Neurons.Count().ShouldBe(numInputs);
+            network.OutputLayer.Neurons.Count().ShouldBe(numOutputs);
+        }
+
+        [Theory]
+        [InlineData(5, 3)]
+        [InlineData(1, 10)]
+        public void EvaluateNetworkShouldMatchOutputLayer(int numInputs, int numOutputs)
+        {
+            // Arrange
+            var network = new NeuralNet(numInputs, numOutputs);
+            network.InputLayer.Neurons.Each(n => n.Value = 0.5M);
+
+            // Act
+            var evalResult = network.Evaluate().ToList();
+
+            // Assert
+            int index = 0;
+            network.OutputLayer.Neurons.Each(n => n.Value.ShouldBe(evalResult[index++]));
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(0.5)]
+        [InlineData(1)]
+        [InlineData(-0.25)]
+        [InlineData(-1)]
+        public void EvaluateNetworkShouldCompute(decimal value)
+        {
+            // Arrange
+            int numInputs = 3;
+            var network = new NeuralNet(numInputs, 1);
+            network.InputLayer.Neurons.Each(n => n.Value = value);
+
+            // Act
+            network.Evaluate().ToList();
+
+            // Assert
+            network.OutputLayer.Neurons.Each(n => n.Value.ShouldBe(value * numInputs));
+        }
     }
 }
