@@ -3,8 +3,7 @@
 open System.Runtime.InteropServices
 
 /// Represents a connection between two Neurons
-type NeuronConnection(source: Neuron, ?initialWeight: decimal) = // TODO: This class might not be needed anymore
-
+type NeuronConnection(source: Neuron, ?initialWeight: decimal) =
   let mutable weight: decimal  = defaultArg initialWeight 1M ;
 
   /// The neuron this connection comes from
@@ -16,11 +15,10 @@ type NeuronConnection(source: Neuron, ?initialWeight: decimal) = // TODO: This c
     and set(newWeight) = weight <- newWeight
 
   /// Calculates the value of the connection by evaluating the weight and the current value of the source neuron
-  member this.Calculate = this.Weight * this.Source.Value;
+  member this.Evaluate() = this.Weight * this.Source.Value;
 
 /// Represents a node in a Neural Network
 and Neuron ([<Optional>] ?initialValue: decimal) =
-
   let mutable value = defaultArg initialValue 0M;
   let mutable inputs: NeuronConnection seq = Seq.empty;
 
@@ -37,17 +35,21 @@ and Neuron ([<Optional>] ?initialValue: decimal) =
 
   /// Adds all connections together, stores the result in Value, and returns the value
   member this.Evaluate(): decimal =
-    value <- Seq.sumBy (fun (c:NeuronConnection) -> c.Calculate) this.Inputs;
+    if not (Seq.isEmpty this.Inputs) then do
+      let numInputs = Seq.length this.Inputs |> decimal
+      value <- Seq.sumBy (fun (c:NeuronConnection) -> c.Evaluate()) this.Inputs / numInputs;
     value;
 
-  /// Connects this neuron to another
+  /// Connects this neuron to another and returns the connection
   member this.Connect(target: Neuron) =
-    target.AddIncomingConnection(new NeuronConnection(this));
+    let connection = new NeuronConnection(this);
+    target.AddIncomingConnection(connection);
+    connection;
 
 /// A layer is just a series of Neurons in parallel that will link to every Neuron in the next layer (if any is present)
 and NeuralNetLayer(numNeurons: int) =
   do if numNeurons <= 0 then invalidArg "numNeurons" "There must be at least one neuron in each layer";
-    
+
   let neurons: Neuron seq = seq [ for i in 1 .. numNeurons -> new Neuron 0M]
   /// Layers should start with an empty collection of neurons
   member this.Neurons: Neuron seq = neurons;
@@ -59,44 +61,50 @@ and NeuralNetLayer(numNeurons: int) =
 
   /// Evaluates the layer and returns the value of each node
   member this.Evaluate(): decimal seq =
-    seq {
-      for n in this.Neurons do
-        yield n.Evaluate();
-    }
+    for n in this.Neurons do n.Evaluate() |> ignore;
+    Seq.map (fun (n:Neuron) -> n.Value) this.Neurons;
 
   /// Connects every node in this layer to the target layer
   member this.Connect(layer: NeuralNetLayer): unit = 
     for nSource in neurons do
       for nTarget in layer.Neurons do
-        nSource.Connect(nTarget);
+        nSource.Connect(nTarget) |> ignore;
 
 /// A high-level encapsulation of a neural net
 and NeuralNet(numInputs: int, numOutputs: int) =
-
   do 
     if numInputs <= 0 then invalidArg "numInputs" "There must be at least one neuron in the input layer";
     if numOutputs <= 0 then invalidArg "numOutputs" "There must be at least one neuron in the output layer";
 
   let inputLayer: NeuralNetLayer = new NeuralNetLayer(numInputs);
   let outputLayer: NeuralNetLayer = new NeuralNetLayer(numOutputs);
+  let mutable hiddenLayers: NeuralNetLayer seq = Seq.empty;
   let mutable isConnected: bool = false;
 
   let connectLayers (n1:NeuralNetLayer) (n2:NeuralNetLayer) = n1.Connect(n2);
 
   let layersMinusInput: NeuralNetLayer seq =
     seq {
+      for layer in hiddenLayers do yield layer;
       yield outputLayer;
     }
 
   let layersMinusOutput: NeuralNetLayer seq =
     seq {
       yield inputLayer;
+      for layer in hiddenLayers do yield layer;
     }
+
+  /// Yields all connections to nodes inside of the network
+  let connections = Seq.collect (fun (l:NeuralNetLayer) -> l.Neurons) layersMinusInput 
+                 |> Seq.collect (fun (n:Neuron) -> n.Inputs); 
 
   /// Gets the layers of the neural network, in sequential order
   member this.Layers: NeuralNetLayer seq =
     seq {
       yield inputLayer;
+      for layer in hiddenLayers do
+        yield layer;
       yield outputLayer;
     }
         
@@ -106,11 +114,9 @@ and NeuralNet(numInputs: int, numOutputs: int) =
   /// Represents the last layer in the network which has the values that will be taken out of the network
   member this.OutputLayer = outputLayer;    
 
-  // TODO: Hidden layer support is important too
-  
   /// Connects the various layers of the neural network
   member this.Connect() =
-    if isConnected = true then invalidOp "The Neural Network has already been connected";
+    if isConnected then invalidOp "The Neural Network has already been connected";
     
     Seq.iter2 (fun l lNext -> connectLayers l lNext) layersMinusOutput layersMinusInput 
     isConnected <- true;
@@ -118,17 +124,22 @@ and NeuralNet(numInputs: int, numOutputs: int) =
   /// Determines whether or not the network has been connected. After the network is connected, it can no longer be added to
   member this.IsConnected = isConnected;
   
+  /// Adds a hidden layer to the middle of the neural net
+  member this.AddHiddenLayer(layer: NeuralNetLayer) = 
+    if isConnected then invalidOp "Hidden layers cannot be added after the network has been connected.";
+    hiddenLayers <- Seq.append hiddenLayers [layer];
+
+  /// Sets the weights on all connections in the neural network
+  member this.SetWeights(weights: decimal seq) = 
+    if isConnected = false then do this.Connect();
+    Seq.iter2 (fun (w:decimal) (c:NeuronConnection) -> c.Weight <- w) weights connections;      
+
   /// Evaluates the entire neural network and yields the result of the output layer
   member this.Evaluate(): decimal seq = 
-
-    // Connect as needed
-    if isConnected = false then do
-      this.Connect();
+    if not isConnected then do this.Connect();
 
     // Iterate through the layers and run calculations
     let mutable result: decimal seq = Seq.empty;
     for layer in this.Layers do
       result <- layer.Evaluate();
-
-    // Return the result of the last layer
     result;

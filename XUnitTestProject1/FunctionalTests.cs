@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using MattEland.AI.Neural.Functional;
 using MattEland.Shared.Collections;
-using Microsoft.FSharp.Collections;
 using Shouldly;
 using Xunit;
 using Neuron = MattEland.AI.Neural.Functional.Neuron;
@@ -149,7 +147,104 @@ namespace MattEland.AI.Tests
             network.Evaluate().ToList();
 
             // Assert
-            network.OutputLayer.Neurons.Each(n => n.Value.ShouldBe(value * numInputs));
+            network.OutputLayer.Neurons.Each(n => n.Value.ShouldBe(value * numInputs / numInputs));
+        }
+        
+        [Fact]
+        public void HiddenLayersShouldBeIncluded()
+        {
+            // Arrange
+            var network = new NeuralNet(3, 1);
+            var hidden = new NeuralNetLayer(5);
+
+            // Act
+            network.AddHiddenLayer(hidden
+);
+
+            // Assert
+            var layers = network.Layers.ToList();
+            layers.Count.ShouldBe(3);
+            layers[0].ShouldBe(network.InputLayer);
+            layers[1].ShouldBe(hidden);
+            layers[2].ShouldBe(network.OutputLayer);
+        }
+
+        [Fact]
+        public void HiddenLayersShouldBeConnectionTargets()
+        {
+            // Arrange
+            var numInputLayer = 3;
+            var network = new NeuralNet(3, 1);
+            var hidden = new NeuralNetLayer(2);
+
+            // Act
+            network.AddHiddenLayer(hidden);
+            network.Connect();
+
+            // Assert
+            hidden.Neurons.Each(n => n.Inputs.Count().ShouldBe(numInputLayer));
+        }
+
+        [Fact]
+        public void SetWeightsShouldWork()
+        {
+            // Arrange
+            var network = new NeuralNet(2, 1);
+            var hidden = new NeuralNetLayer(2);
+            network.AddHiddenLayer(hidden);
+            var weights = new List<decimal> {1, -1, 0.5M, -0.5M, 1, -1};
+
+            // Act
+            network.SetWeights(weights);
+
+            // Assert
+            hidden.Neurons.First().Inputs.First().Weight.ShouldBe(1);
+            hidden.Neurons.First().Inputs.Last().Weight.ShouldBe(-1);
+            hidden.Neurons.Last().Inputs.First().Weight.ShouldBe(0.5M);
+            hidden.Neurons.Last().Inputs.Last().Weight.ShouldBe(-0.5M);
+            network.OutputLayer.Neurons.Single().Inputs.First().Weight.ShouldBe(1);
+            network.OutputLayer.Neurons.Single().Inputs.Last().Weight.ShouldBe(-1);
+        }
+
+        [Fact]
+        public void NeuralNetEvaluation()
+        {
+            // Arrange
+            var network = new NeuralNet(2, 1);
+            var hidden = new NeuralNetLayer(2);
+            network.AddHiddenLayer(hidden);
+            var weights = new List<decimal> {1, -1, 0.5M, -0.5M, 1, -1};
+            var values = new List<decimal> {1, -1};
+
+            // Act
+            network.SetWeights(weights);
+            network.InputLayer.SetValues(values);
+            network.Evaluate();
+
+            // Assert
+            network.InputLayer.Neurons.First().Value.ShouldBe(1);
+            network.InputLayer.Neurons.Last().Value.ShouldBe(-1);
+            hidden.Neurons.First().Value.ShouldBe(1);
+            hidden.Neurons.Last().Value.ShouldBe(0.5M);
+            network.OutputLayer.Neurons.Single().Value.ShouldBe(0.25M);
+        }
+
+        [Fact]
+        public void NodeEvaluationShouldSetNewNodeValue()
+        {
+            // Arrange
+            var input = new NeuralNetLayer(1);
+            var target = new NeuralNetLayer(1);
+            input.Neurons.First().Connect(target.Neurons.First());
+            input.Neurons.First().Value = 0.5M;
+
+            // Act
+            var evalResult = target.Evaluate();
+
+            // Assert
+            target.Neurons.First().Inputs.Single().Weight.ShouldBe(1M);
+            target.Neurons.First().Inputs.Single().Source.ShouldBe(input.Neurons.First());
+            target.Neurons.First().Value.ShouldBe(0.5M);
         }
     }
 }
